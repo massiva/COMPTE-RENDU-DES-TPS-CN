@@ -4,8 +4,6 @@
 /* Numerical library developed to solve 1D    */ 
 /* Poisson problem (Heat equation)            */
 /**********************************************/
-
-
 #include "lib_poisson1D.h"
 
 void set_GB_operator_rowMajor_poisson1D(double* AB, int *lab, int *la){
