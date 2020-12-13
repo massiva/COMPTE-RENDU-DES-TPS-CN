@@ -1,3 +1,4 @@
+
 /**********************************************/
 /* lib_poisson1D.c                            */
 /* Numerical library developed to solve 1D    */ 
@@ -6,27 +7,26 @@
 #include "lib_poisson1D.h"
 
 void set_GB_operator_rowMajor_poisson1D(double* AB, int *lab, int *la){
-
-  int ii, jj, kk;
+    int ii, jj, kk;
 for (jj=0;jj<(*lab);jj++){
     kk = 6*jj;
 
      switch(jj) {
- case 0: 
+ /*case 0: 
             for(ii=0; ii<(*la) ; ii++){
-           AB[kk+ii]=0.0;}break;
+           AB[kk+ii]=0.0;}break;*/
            
- case 1:  
+ case 0:  
          
               for(ii=0; ii<(*la) ; ii++){
            AB[kk+ii]=-1.0;
            }break;
 
- case 2:   
+ case 1:   
             for(ii=0; ii<(*la) ; ii++){
            AB[kk+ii]=2.0;
            }break;
-case 3: 
+ case 2: 
           for(ii=0; ii<(*la) ; ii++){
            AB[kk+ii]=-1.0;
            }break; 
@@ -34,24 +34,26 @@ case 3:
 
 }
 }
-AB[6]=0.0;
+AB[0]=0.0;
 AB[(*lab)*(*la)-1]=0.0;
+
 }
 void set_GB_operator_colMajor_poisson1D(double* AB, int *lab, int *la, int *kv){
   int ii, jj, kk;
   for (jj=0;jj<(*la);jj++){
     kk = jj*(*lab);
-    if (*kv>=0){
+    if ( *kv>=0){
       for (ii=0;ii< *kv;ii++){
-	AB[kk+ii]=0.0;
+	//AB[kk+ii]=0.0;
+ 	AB[kk+ ii]=-1.0;
       }
     }
-    AB[kk+ *kv]=-1.0;
-    AB[kk+ *kv+1]=2.0;
-    AB[kk+ *kv+2]=-1.0;
+    AB[kk+ *kv]=2.0;
+    AB[kk+ *kv+1]=-1.0;
+    //AB[kk+ *kv+2]=-1.0;
   }
-  AB[0]=0.0;
-  if (*kv == 1) {AB[1]=0;}
+  //AB[0]=0.0;
+  if (*kv == 1) {AB[0]=0;} 
   
   AB[(*lab)*(*la)-1]=0.0;
 }
@@ -108,7 +110,7 @@ void write_GB_operator_rowMajor_poisson1D(double* AB, int* lab, int* la, char* f
   if (file != NULL){
     for (ii=0;ii<(*lab);ii++){
       for (jj=0;jj<(*la);jj++){
-	fprintf(file,"%lf\t",AB[ii*(*la)+jj]);
+	fprintf(file,"%lf\t",AB[ii*(* la)+jj]);
       }
       fprintf(file,"\n");
     }
@@ -120,7 +122,22 @@ void write_GB_operator_rowMajor_poisson1D(double* AB, int* lab, int* la, char* f
 }
 
 void write_GB_operator_colMajor_poisson1D(double* AB, int* lab, int* la, char* filename){
-  //TODO
+   FILE * file;
+  int ii,jj;
+  file = fopen(filename, "w");
+  //Numbering from 1 to la
+  if (file != NULL){
+    for (ii=0;ii<(*la);ii++){
+      for (jj=0;jj<(*lab);jj++){
+    fprintf(file,"%lf\t",AB[ii*(* lab)+jj]);
+      }
+      fprintf(file,"\n");
+    }
+    fclose(file);
+  }
+  else{
+    perror(filename);
+  }
 }
 
 void write_vec(double* vec, int* la, char* filename){
