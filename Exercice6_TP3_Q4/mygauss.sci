@@ -10,18 +10,21 @@ function[sol,niter,info]= mygauss(A,b,nmaxit,tol)
      sol=b
      niter=0 
      info=0 
+      err=[]  
            for k=1:nmaxit
                sol =inv(D-E)*((F*sol)+b)
+               err=[err,norm(x-sol)];
                 if max(abs(A*sol-b))< tol 
                     info = 1;
                     niter= k;
                     break
                  end
             end
-          
+  plot(1:niter,log(err))
 endfunction
 A=[2 -1 0;-1 2 -1;0 -1 2]
 b=[4; 3; 1]
 [sol,niter,info]= mygauss(A,b,100,0.01)
 x=inv(A)*b
+
 
